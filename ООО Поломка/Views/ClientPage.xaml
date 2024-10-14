@@ -14,7 +14,21 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid>
-            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+                <Label Content="Фильтрация по полу"/>
+                <ComboBox ItemsSource="{Binding Genders}"
+                          DisplayMemberPath="Name"
+                          SelectedItem="{Binding SelectedGender}"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+                <Label Content="Поиск по ФИО, email и телефону"/>
+                <TextBox Text="{Binding Search, 
+                    UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
         </Grid>
         <ListView Grid.Row="1" ItemsSource="{Binding Clients}" 
                   SelectedItem="{Binding SelectedClient}">
@@ -31,12 +45,42 @@
                     <GridViewColumn Header="Дата добавления" DisplayMemberBinding="{Binding RegistrationDate, StringFormat=dd.MM.yyyy}"/>
                     <GridViewColumn Header="Дата последнего посещения" DisplayMemberBinding="{Binding LastVisit, StringFormat=dd.MM.yyyy}"/>
                     <GridViewColumn Header="Количество посещений" DisplayMemberBinding="{Binding CountVisit}"/>
-                    <GridViewColumn Header="Список тегов" DisplayMemberBinding="{Binding Tags}"/>
+                    <GridViewColumn Header="Список тегов" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <ItemsControl ItemsSource="{Binding Tags}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Foreground="{Binding BrushColor}" Padding="5" Text="{Binding Title}"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>
         <Grid Grid.Row="2">
-
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Label Content="{Binding CountRecords}"/>
+            <Button Grid.Column="1" Content="Предыдущая страница" Click="PreviousPage" Margin="1,4,5,2"/>
+            <Button Grid.Column="2" Content="Следующая страница" Click="NextPage"/>
+            <StackPanel Grid.Column="3">
+                <Label Content="Кол-во записей на странице" />
+                <ComboBox ItemsSource="{Binding PageRecords}"
+                          SelectedItem="{Binding CurrentPageRecordsCount}"/>
+            </StackPanel>
         </Grid>
     </Grid>
 </Page>
