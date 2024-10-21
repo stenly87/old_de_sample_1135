@@ -82,11 +82,11 @@ public partial class ModelContext : DbContext
                     "TagOfClient",
                     r => r.HasOne<Tag>().WithMany()
                         .HasForeignKey("TagId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("FK_TagOfClient_Tag"),
                     l => l.HasOne<Client>().WithMany()
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("FK_TagOfClient_Client"),
                     j =>
                     {

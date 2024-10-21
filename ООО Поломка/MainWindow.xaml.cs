@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ООО_Поломка.DB;
 using ООО_Поломка.Views;
 
 namespace ООО_Поломка
@@ -32,10 +33,24 @@ namespace ООО_Поломка
             }
         }
 
+        public List<Client> ClientsBirthdayMonth { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
             instance = this;
+            var modelContext = new ModelContext();
+            int month = DateTime.Now.Month;
+            try
+            {
+                ClientsBirthdayMonth = modelContext.Clients.Where(
+                    s => s.Birthday.Value.Month == month).ToList();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Возникла ошибка при получении данных с сервера");
+            }
+
             DataContext = this;
 
             CurrentPage = new ClientPage();

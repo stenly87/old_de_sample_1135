@@ -14,7 +14,34 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
             <Image HorizontalAlignment="Left" Source="/service_logo.png" />
+
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Label Content="День рождения у клиентов в этом месяце:"/>
+                <ItemsControl Grid.Row="1" Height="100" ItemsSource="{Binding ClientsBirthdayMonth}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Label Content="{Binding LastName}"/>
+                                <TextBlock Margin="3" Padding="5" Text="{Binding Birthday, StringFormat=dd.MM.yyyy}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </Grid>
         </Grid>
         <Frame Content="{Binding CurrentPage}" 
                Grid.Row="1" 

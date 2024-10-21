@@ -15,19 +15,39 @@
         </Grid.RowDefinitions>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition  Width="Auto"/>
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
             <StackPanel>
                 <Label Content="Фильтрация по полу"/>
                 <ComboBox ItemsSource="{Binding Genders}"
                           DisplayMemberPath="Name"
                           SelectedItem="{Binding SelectedGender}"/>
             </StackPanel>
-            <StackPanel Grid.Column="1">
+            <StackPanel Grid.Column="1" Grid.Row="1">
                 <Label Content="Поиск по ФИО, email и телефону"/>
                 <TextBox Text="{Binding Search, 
                     UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+            <StackPanel Grid.Row="1">
+                <Label Content="Сортировка"/>
+                <ComboBox SelectedIndex="{Binding SortingIndex}">
+                    <ComboBoxItem>Нет</ComboBoxItem>
+                    <ComboBoxItem>По фамилии (алф)</ComboBoxItem>
+                    <ComboBoxItem>По дате последнего  посещения</ComboBoxItem>
+                    <ComboBoxItem>По кол-ву посещений</ComboBoxItem>
+                </ComboBox>
+            </StackPanel>
+            
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Row="1" Grid.Column="2" Orientation="Horizontal">
+                <Button Click="AddClient" Style="{StaticResource mainButton}" Content="Добавить"/>
+                <Button Click="EditClient" Style="{StaticResource mainButton}" Content="Изменить"/>
+                <Button Click="RemoveClient" Style="{StaticResource mainButton}" Content="Удалить"/>
             </StackPanel>
         </Grid>
         <ListView Grid.Row="1" ItemsSource="{Binding Clients}" 
@@ -66,21 +86,15 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Label Content="{Binding CountRecords}"/>
-            <Button Grid.Column="1" Content="Предыдущая страница" Click="PreviousPage" Margin="1,4,5,2"/>
-            <Button Grid.Column="2" Content="Следующая страница" Click="NextPage"/>
-            <StackPanel Grid.Column="3">
+        <StackPanel HorizontalAlignment="Center"  Grid.Row="2" Orientation="Horizontal">
+            <Button  Content="Предыдущая страница" Click="PreviousPage" Margin="1,4,5,2"/>
+            <Label VerticalAlignment="Center" Content="{Binding CountRecords}"/>
+            <Button  Content="Следующая страница" Click="NextPage"/>
+            <StackPanel >
                 <Label Content="Кол-во записей на странице" />
                 <ComboBox ItemsSource="{Binding PageRecords}"
                           SelectedItem="{Binding CurrentPageRecordsCount}"/>
             </StackPanel>
-        </Grid>
+        </StackPanel>
     </Grid>
 </Page>
