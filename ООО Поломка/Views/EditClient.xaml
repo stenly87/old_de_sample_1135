@@ -7,25 +7,34 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="EditClient">
-    <StackPanel>
-        <StackPanel Visibility="{Binding IsEditClient}">
-            <Label Content="Идентификатор"/>
-            <TextBox IsReadOnly="True" Text="{Binding SelectedClient.Id}"/>
+    <ScrollViewer>
+        <StackPanel>
+            <StackPanel Visibility="{Binding IsEditClient}">
+                <Label Content="Идентификатор"/>
+                <TextBox IsReadOnly="True" Text="{Binding SelectedClient.Id}"/>
+            </StackPanel>
+            <Label Content="Фамилия"/>
+            <TextBox Text="{Binding SelectedClient.LastName}"/>
+            <Label Content="Имя"/>
+            <TextBox Text="{Binding SelectedClient.FirstName}"/>
+            <Label Content="Отчество"/>
+            <TextBox Text="{Binding SelectedClient.Patronymic}"/>
+            <Label Content="E-mail"/>
+            <TextBox Text="{Binding SelectedClient.Email}"/>
+            <Label Content="Телефон"/>
+            <TextBox Text="{Binding SelectedClient.Phone}"/>
+            <Label Content="Дата рождения"/>
+            <DatePicker SelectedDate="{Binding SelectedClient.Birthday}"/>
+            <Label Content="Пол"/>
+            <StackPanel Orientation="Horizontal">
+                <RadioButton IsChecked="{Binding Man}" Content="Мужской"/>
+                <RadioButton IsChecked="{Binding Woman}" Content="Женский"/>
+            </StackPanel>
+            <Label Content="Фото"/>
+            <Image Source="{Binding Foto}" MaxHeight="100"/>
+            <Button Content="Выбрать фото" Click="SelectFoto"/>
+
+            <Button Content="Сохранить клиента" Click="Save"/>
         </StackPanel>
-        <Label Content="Фамилия"/>
-        <TextBox Text="{Binding SelectedClient.LastName}"/>
-        <Label Content="Имя"/>
-        <TextBox Text="{Binding SelectedClient.FirstName}"/>
-        <Label Content="Отчество"/>
-        <TextBox Text="{Binding SelectedClient.Patronymic}"/>
-        <Label Content="E-mail"/>
-        <TextBox Text="{Binding SelectedClient.Email}"/>
-        <Label Content="Телефон"/>
-        <TextBox Text="{Binding SelectedClient.Phone}"/>
-        <Label Content="Дата рождения"/>
-        <DatePicker SelectedDate="{Binding SelectedClient.Birthday}"/>
-        
-
-
-    </StackPanel>
+    </ScrollViewer>
 </Page>
