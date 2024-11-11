@@ -7,6 +7,13 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="EditClient">
+    <Page.Resources>
+        <DataTemplate x:Key="listItem" DataType="ListBoxItem">
+            <Grid>
+                <TextBlock Foreground="{Binding BrushColor}" Padding="5" Text="{Binding Title}"/>
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
     <ScrollViewer>
         <StackPanel>
             <StackPanel Visibility="{Binding IsEditClient}">
@@ -24,16 +31,48 @@
             <Label Content="Телефон"/>
             <TextBox Text="{Binding SelectedClient.Phone}"/>
             <Label Content="Дата рождения"/>
-            <DatePicker SelectedDate="{Binding SelectedClient.Birthday}"/>
+            <DatePicker SelectedDate="{Binding SelectedClient.BirthdayBinding}"/>
             <Label Content="Пол"/>
             <StackPanel Orientation="Horizontal">
                 <RadioButton IsChecked="{Binding Man}" Content="Мужской"/>
                 <RadioButton IsChecked="{Binding Woman}" Content="Женский"/>
             </StackPanel>
-            <Label Content="Фото"/>
-            <Image Source="{Binding Foto}" MaxHeight="100"/>
-            <Button Content="Выбрать фото" Click="SelectFoto"/>
-
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <Label Content="Фото" HorizontalAlignment="Center"/>
+                    <Image Source="{Binding Foto}" MaxHeight="100"/>
+                    <Button Content="Выбрать фото" Click="SelectFoto"/>
+                </StackPanel>
+                <Grid Grid.Column="1" HorizontalAlignment="Right">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Все теги" HorizontalAlignment="Center" />
+                    <Label Content="Теги клиента" Grid.Column="2" HorizontalAlignment="Center" />
+                    <ListBox ItemTemplate="{DynamicResource listItem}" 
+                             SelectedItem="{Binding SelectedAllTag}" Width="150" 
+                             ItemsSource="{Binding AllTags}" Grid.Row="1"/>
+                    <StackPanel Grid.Column="1" Grid.Row="1">
+                        <Button Width="30" Content="&gt;" Click="AddTag"/>
+                        <Button Width="30" Content="&lt;" Click="DeleteTag"/> 
+                    </StackPanel>
+                    <ListBox ItemTemplate="{DynamicResource listItem}" 
+                             SelectedItem="{Binding SelectedClientTag}"
+                             Width="150"
+                             Grid.Column="2" Grid.Row="1" 
+                             ItemsSource="{Binding SelectedClient.Tags}"/>
+                </Grid>
+            </Grid>
             <Button Content="Сохранить клиента" Click="Save"/>
         </StackPanel>
     </ScrollViewer>

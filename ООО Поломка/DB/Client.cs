@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace ООО_Поломка.DB;
 
@@ -29,5 +30,5 @@ public partial class Client
 
     public virtual Gender GenderCodeNavigation { get; set; } = null!;
 
-    public virtual ICollection<Tag> Tags { get; set; } = new List<Tag>();
+    public virtual ICollection<Tag> Tags { get; set; } = new ObservableCollection<Tag>();
 }

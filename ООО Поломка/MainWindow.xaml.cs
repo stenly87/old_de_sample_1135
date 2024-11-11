@@ -19,17 +19,40 @@ namespace ООО_Поломка
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        Stack<Page> history = new Stack<Page>();
         static internal MainWindow instance;
 
         private Page currentPage;
+        private Visibility buttonHistoryVisibility;
 
-        public Page CurrentPage { 
+        public Page CurrentPage 
+        { 
             get => currentPage;
             set
             {
+                if (value != null)
+                {
+                    if (currentPage != null)
+                        history.Push(currentPage);
+                }
                 currentPage = value;
+
+                ButtonHistoryVisibility = value is ClientPage ?
+                       Visibility.Collapsed :
+                       Visibility.Visible;
                 PropertyChanged?.Invoke(this, 
                     new PropertyChangedEventArgs(nameof(CurrentPage)));
+            }
+        }
+
+        public Visibility ButtonHistoryVisibility
+        {
+            get => buttonHistoryVisibility;
+            set
+            {
+                buttonHistoryVisibility = value;
+                PropertyChanged?.Invoke(this,
+                   new PropertyChangedEventArgs(nameof(ButtonHistoryVisibility)));
             }
         }
 
@@ -52,10 +75,17 @@ namespace ООО_Поломка
             }
 
             DataContext = this;
-
             CurrentPage = new ClientPage();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
+
+        private void BackHistory(object sender, RoutedEventArgs e)
+        {
+            if (history.Count == 1)
+                CurrentPage = history.Peek();
+            else
+                CurrentPage = history.Pop();
+        }
     }
 }

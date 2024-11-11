@@ -17,6 +17,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition />
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Image HorizontalAlignment="Left" Source="/service_logo.png" />
 
@@ -42,6 +43,8 @@
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>
             </Grid>
+
+            <Button VerticalAlignment="Bottom" Visibility="{Binding ButtonHistoryVisibility}" Click="BackHistory" Content="Вернуться" Grid.Column="2"/>
         </Grid>
         <Frame Content="{Binding CurrentPage}" 
                Grid.Row="1" 

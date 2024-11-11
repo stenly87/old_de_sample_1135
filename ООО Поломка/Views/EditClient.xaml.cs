@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -40,8 +41,11 @@ namespace ООО_Поломка.Views
             }
         }
         string fotoPath;
-
+        public List<Tag> AllTags { get; set; }
         public List<Gender> Genders { get; set; }
+
+        public Tag SelectedAllTag { get; set; }
+        public Tag SelectedClientTag { get; set; }
 
         public Visibility IsEditClient { get; set; } = Visibility.Collapsed;
         public EditClient()
@@ -83,6 +87,7 @@ namespace ООО_Поломка.Views
         {
             var modelContext = new ModelContext();
             Genders = modelContext.Genders.ToList();
+            AllTags = modelContext.Tags.ToList();
         }
 
         public EditClient(Client selectedClient)
@@ -133,56 +138,62 @@ namespace ООО_Поломка.Views
 
         private void Save(object sender, RoutedEventArgs e)
         {
-            var modelContext = new ModelContext();
-            if (CheckFIOLengthIsBad(SelectedClient))
+            try
             {
-                MessageBox.Show("ФИО клиента должны быть длиной менее 50 символов");
-                return;
-            }
+                var modelContext = new ModelContext();
+                if (CheckFIOLengthIsBad(SelectedClient))
+                {
+                    MessageBox.Show("ФИО клиента должны быть длиной менее 50 символов");
+                    return;
+                }
 
-            if (CheckFIOCharsIsBad(SelectedClient))
-            {
-                MessageBox.Show("ФИО клиента должны состоять из букв и символов пробела или дефиса");
-                return;
-            }
+                if (CheckFIOCharsIsBad(SelectedClient))
+                {
+                    MessageBox.Show("ФИО клиента должны состоять из букв и символов пробела или дефиса");
+                    return;
+                }
 
-            if (CheckEmailIsBad(SelectedClient))
-            {
-                MessageBox.Show("Email клиента некорректный");
-                return;
-            }
+                if (CheckEmailIsBad(SelectedClient))
+                {
+                    MessageBox.Show("Email клиента некорректный");
+                    return;
+                }
 
-            if (CheckPhoneIsBad(SelectedClient))
-            {
-                MessageBox.Show("Телефон клиента может содержать только цифры и символы: + -  ( ) и пробел");
-                return;
-            }
+                if (CheckPhoneIsBad(SelectedClient))
+                {
+                    MessageBox.Show("Телефон клиента может содержать только цифры и символы: + -  ( ) и пробел");
+                    return;
+                }
 
-            if (!Man && !Woman)
-            {
-                MessageBox.Show("Небинарные личности не приветствуются");
-                return;
-            }
-            if (Man)
-            {
-                SelectedClient.GenderCodeNavigation = Genders.First(s => s.Name == "Мужской");
-                SelectedClient.GenderCode = SelectedClient.GenderCodeNavigation.Code;
-            }
-            else
-            {
-                SelectedClient.GenderCodeNavigation = Genders.First(s => s.Name == "Женский");
-                SelectedClient.GenderCode = SelectedClient.GenderCodeNavigation.Code;
-            }
-            SelectedClient.PhotoPath = fotoPath;
+                if (!Man && !Woman)
+                {
+                    MessageBox.Show("Небинарные личности не приветствуются");
+                    return;
+                }
 
-            if (SelectedClient.Id == 0)
-                modelContext.Clients.Add(SelectedClient);
-            else
-            {
-                var original = modelContext.Clients.Find(SelectedClient.Id);
-                modelContext.Entry(original).CurrentValues.SetValues(SelectedClient);
+                SelectedClient.GenderCode = Man ? "м" : "ж";
+                SelectedClient.PhotoPath = fotoPath;
+
+                if (SelectedClient.Id == 0)
+                    modelContext.Clients.Add(SelectedClient);
+                else
+                {
+                    var original = modelContext.
+                        Clients.
+                        Include(s=>s.Tags).
+                        FirstOrDefault(s=>s.Id == SelectedClient.Id);
+                    modelContext.Entry(original).
+                       CurrentValues.SetValues(SelectedClient);
+                    original.Tags.Clear();
+                    foreach (var tag in SelectedClient.Tags)
+                        original.Tags.Add(modelContext.Tags.Find(tag.Id));
+                }
+                modelContext.SaveChanges();
             }
-            modelContext.SaveChanges();
+            catch (Exception ex)
+            {
+                MessageBox.Show("Возникли ошибки. Могут быть потеряны данные.");
+            }
             MainWindow.instance.CurrentPage = new ClientPage();
         }
 
@@ -201,6 +212,10 @@ namespace ООО_Поломка.Views
 
         private bool CheckFIOCharsIsBad(Client selectedClient)
         {
+            if (string.IsNullOrEmpty(selectedClient.FirstName) ||
+                string.IsNullOrEmpty(selectedClient.LastName) ||
+                string.IsNullOrEmpty(selectedClient.Patronymic))
+                return true;
             return CheckCharsBad(selectedClient.FirstName) ||
                 CheckCharsBad(selectedClient.LastName) ||
                 CheckCharsBad(selectedClient.Patronymic);
@@ -218,9 +233,24 @@ namespace ООО_Поломка.Views
 
         private bool CheckFIOLengthIsBad(Client selectedClient)
         {
-            return (selectedClient.FirstName.Length > 50 ||
-                selectedClient.LastName.Length > 50 ||
-                selectedClient.Patronymic.Length > 50);
+            return (selectedClient.FirstName?.Length > 50 ||
+                selectedClient.LastName?.Length > 50 ||
+                selectedClient.Patronymic?.Length > 50);
+        }
+
+        private void AddTag(object sender, RoutedEventArgs e)
+        {
+            if (SelectedAllTag != null)
+            {
+                if (SelectedClient.Tags.FirstOrDefault(s=>s.Id == SelectedAllTag.Id) == null)
+                    SelectedClient.Tags.Add(SelectedAllTag);
+            }
+        }
+
+        private void DeleteTag(object sender, RoutedEventArgs e)
+        {
+            if (SelectedClientTag != null)
+                SelectedClient.Tags.Remove(SelectedClientTag);
         }
     }
 }

@@ -15,5 +15,16 @@ namespace ООО_Поломка.DB
         [NotMapped]
         public DateTime? LastVisit { get => 
                 ClientServices?.LastOrDefault()?.StartTime; }
+
+        [NotMapped]
+        public DateTime BirthdayBinding
+        {
+            get {
+                return Birthday.Value.ToDateTime(new TimeOnly());
+            }
+            set {
+                Birthday = DateOnly.FromDateTime(value);
+            }
+        }
     }
 }
