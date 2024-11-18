@@ -48,6 +48,7 @@
                 <Button Click="AddClient" Style="{StaticResource mainButton}" Content="Добавить"/>
                 <Button Click="EditClient" Style="{StaticResource mainButton}" Content="Изменить"/>
                 <Button Click="RemoveClient" Style="{StaticResource mainButton}" Content="Удалить"/>
+                <Button Click="ViewClientService" Style="{StaticResource mainButton}" Content="История посещений"/>
             </StackPanel>
         </Grid>
         <ListView Grid.Row="1" ItemsSource="{Binding Clients}" 

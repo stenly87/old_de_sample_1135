@@ -26,5 +26,11 @@ namespace ООО_Поломка.DB
                 Birthday = DateOnly.FromDateTime(value);
             }
         }
+
+        [NotMapped]
+        public string FIO
+        {
+            get => $"{LastName} {FirstName} {Patronymic}";
+        }
     }
 }

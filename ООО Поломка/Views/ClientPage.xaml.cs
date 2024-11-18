@@ -104,6 +104,7 @@ namespace ООО_Поломка.Views
         {
             InitializeComponent();
             modelContext = new ModelContext();
+            modelContext.Services.ToList();
             try
             {
                 Genders = modelContext.Genders.ToList();
@@ -269,6 +270,13 @@ namespace ООО_Поломка.Views
             {
                 MessageBox.Show("Возникла ошибка при получении данных с сервера");
             }
+        }
+
+        private void ViewClientService(object sender, RoutedEventArgs e)
+        {
+            if (SelectedClient == null)
+                return;
+            MainWindow.instance.CurrentPage = new ClientServicePage(SelectedClient);
         }
     }
 }
